@@ -8,6 +8,7 @@
 
 import sys
 import re
+import os
 
 """Baby Names exercise
 
@@ -41,7 +42,27 @@ def extract_names(filename):
   ['2006', 'Aaliyah 91', Aaron 57', 'Abagail 895', ' ...]
   """
   # +++your code here+++
-  return
+  names=[]
+  f=open(filename,'r')
+  text=f.read()
+  year_match=re.search(r'Popularity\sin\s(\d\d\d\d)',text)
+  
+  
+  names.append(year_match.group(1))
+
+  tuples = re.findall(r'<td>(\d+)</td><td>(\w+)</td>\<td>(\w+)</td>', text)
+  rank_names={}
+  for i in tuples:
+    rank_names[i[1]]=i[0]
+    rank_names[i[2]]=i[0]
+ 
+
+
+  sorted_names=sorted(rank_names.keys())
+  for name in sorted_names:
+    names.append(name + " " + rank_names[name])
+
+  return names
 
 
 def main():
@@ -51,7 +72,7 @@ def main():
   args = sys.argv[1:]
 
   if not args:
-    print 'usage: [--summaryfile] file [file ...]'
+    print ('usage: [--summaryfile] file [file ...]')
     sys.exit(1)
 
   # Notice the summary flag and remove it from args if it is present.
@@ -59,6 +80,20 @@ def main():
   if args[0] == '--summaryfile':
     summary = True
     del args[0]
+  if not os.path.exists('babynamestest'):
+    os.makedirs('babynamestest')
+  ans = open(os.path.join('babynamestest', 'babyname.txt'), 'w') 
+  # +++your code here+++
+  for files in args:
+    names = extract_names(files)
+    for i in names:
+      ans.write(i + '\n')
+      #print(i,end='\n')
+  #print (names[0]+names[1])
+  ans.close()
+  ans=open(os.path.join('babynamestest', 'babyname.txt'), 'r')
+  for i in ans:
+    print(i, end='')
 
   # +++your code here+++
   # For each filename, get the names, then either print the text output
