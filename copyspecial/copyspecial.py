@@ -17,6 +17,33 @@ import commands
 
 # +++your code here+++
 # Write functions and modify main() to call them
+def get_special_paths(dirname):
+  """Given a dirname, returns a list of all its special files."""
+  result = []
+  paths = os.listdir(dirname)  # list of paths in that dir
+  for i in paths:
+    match = re.search(r'__(\w+)__', i)
+    if match:
+      result.append(os.path.abspath(os.path.join(dirname, i)))
+  return result
+
+def copy_to(paths, to_dir):
+  if not os.path.exists(to_dir):
+    os.mkdir(to_dir)
+  for path in paths:
+    f_name = os.path.basename(path)
+    shutil.copy(path, os.path.join(to_dir, f_name))
+
+def zip_to(paths, zipfile):
+  
+  cmd = 'zip -j ' + zipfile + ' ' + ' '.join(paths)
+  print(cmd)
+  (status, output) = commands.getstatusoutput(cmd)
+  # If command had a problem (status is non-zero),
+  # print its output to stderr and exit.
+  if status:
+    sys.stderr.write(output)
+    sys.exit(1)
 
 
 
@@ -28,7 +55,7 @@ def main():
   # which is the script itself.
   args = sys.argv[1:]
   if not args:
-    print "usage: [--todir dir][--tozip zipfile] dir [dir ...]";
+    print ("usage: [--todir dir][--tozip zipfile] dir [dir ...]")
     sys.exit(1)
 
   # todir and tozip are either set from command line
@@ -45,7 +72,7 @@ def main():
     del args[0:2]
 
   if len(args) == 0:
-    print "error: must specify one or more dirs"
+    print ("error: must specify one or more dirs")
     sys.exit(1)
 
   # +++your code here+++

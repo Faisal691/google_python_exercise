@@ -40,6 +40,40 @@ print_words() and print_top().
 import sys
 
 # +++your code here+++
+
+
+def print_words(filename):
+  fl = open(filename, 'r')
+  text = fl.read()
+  words={}
+  text = text.lower()
+  text_list = text.split()
+  for i in text_list:
+    if i in words:
+      words[i] += 1
+    else:
+      words[i]=1
+  
+  for i in sorted(words.keys()):
+    print(i +' '+ str(words[i]), end='\n')
+
+def print_top(filename):
+  fl = open(filename, 'r')
+  text = fl.read()
+  words={}
+  text = text.lower()
+  text_list = text.split()
+  for i in text_list:
+    if i in words:
+      words[i] += 1
+    else:
+      words[i]=1
+
+  words=dict(sorted(words.items(), key= lambda item: item[1],reverse=True))
+  for index,i in enumerate(words.keys()):
+    print(i+' ' + str(words[i]))
+    if index == 19:
+      break
 # Define print_words(filename) and print_top(filename) functions.
 # You could write a helper utility function that reads a file
 # and builds and returns a word/count dict for it.
@@ -51,7 +85,7 @@ import sys
 # calls the print_words() and print_top() functions which you must define.
 def main():
   if len(sys.argv) != 3:
-    print 'usage: ./wordcount.py {--count | --topcount} file'
+    print ('usage: ./wordcount.py {--count | --topcount} file')
     sys.exit(1)
 
   option = sys.argv[1]
@@ -61,7 +95,7 @@ def main():
   elif option == '--topcount':
     print_top(filename)
   else:
-    print 'unknown option: ' + option
+    print ('unknown option: ' + option)
     sys.exit(1)
 
 if __name__ == '__main__':
